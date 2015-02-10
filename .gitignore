@@ -1,0 +1,7 @@
+# Ignore Files
+
+*.tmpl
+*.swp
+*.pyc
+
+# Ignore Folders
