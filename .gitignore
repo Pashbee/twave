@@ -3,5 +3,5 @@
 *.tmpl
 *.swp
 *.pyc
-
+*.json*
 # Ignore Folders
