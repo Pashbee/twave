@@ -17,18 +17,27 @@ type jsonobject struct {
 	Value string
 }
 
-func PerformAuth() {
-	file, e := ioutil.ReadFile("./config.json")
+func LoadAuthKeys(filename string) []string {
+
+	var jsontype []jsonobject
+	keyValues := make([]string, 4)
+	file, e := ioutil.ReadFile(filename)
 	if e != nil {
 		fmt.Printf("File error: %v\n", e)
 		os.Exit(1)
 	}
-	fmt.Printf("%s\n", string(file))
-	var jsontype []jsonobject
 	json.Unmarshal(file, &jsontype)
-	fmt.Printf("%+v", jsontype)
+	for i := range jsontype {
+		keyValues[i] = jsontype[i].Value
+	}
+	return keyValues
+}
+
+func PerformAuth() {
+
 }
 
 func main() {
-	PerformAuth()
+	apiKeys := LoadAuthKeys("./config.json")
+	fmt.Println(apiKeys[0])
 }
