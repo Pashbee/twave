@@ -33,11 +33,12 @@ func LoadAuthKeys(filename string) []string {
 	return keyValues
 }
 
-func PerformAuth() {
+func PerformAuth(keys []string) {
 
+	fmt.Println(len(keys))
 }
 
 func main() {
 	apiKeys := LoadAuthKeys("./config.json")
-	fmt.Println(apiKeys[0])
+	PerformAuth(apiKeys)
 }
