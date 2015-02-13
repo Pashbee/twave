@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/ChimeraCoder/anaconda"
 	"io/ioutil"
+	// "net/url"
 	"os"
-	// "reflect"
 )
 
 type Tauth struct {
@@ -34,18 +34,19 @@ func LoadAuthKeys(filename string) []string {
 	return keyValues
 }
 
-func PerformAuth(keys []string) {
+func PerformAuth(keys []string) *anaconda.TwitterApi {
 
 	anaconda.SetConsumerKey(keys[0])
 	anaconda.SetConsumerSecret(keys[1])
 	api := anaconda.NewTwitterApi(keys[2], keys[3])
-	searchResult, _ := api.GetSearch("golang", nil)
-	for _, tweet := range searchResult.Statuses {
-		fmt.Println(tweet.Text)
-	}
+	return api
 }
 
 func main() {
 	apiKeys := LoadAuthKeys("./config.json")
-	PerformAuth(apiKeys)
+	twApi := PerformAuth(apiKeys)
+	searchResult, _ := twApi.GetSearch("golang", nil)
+	for _, tweet := range searchResult.Statuses {
+		fmt.Println(tweet.Text)
+	}
 }
