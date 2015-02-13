@@ -3,9 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	//	"github.com/ChimeraCoder/anaconda"
+	"github.com/ChimeraCoder/anaconda"
 	"io/ioutil"
 	"os"
+	// "reflect"
 )
 
 type Tauth struct {
@@ -35,7 +36,13 @@ func LoadAuthKeys(filename string) []string {
 
 func PerformAuth(keys []string) {
 
-	fmt.Println(len(keys))
+	anaconda.SetConsumerKey(keys[0])
+	anaconda.SetConsumerSecret(keys[1])
+	api := anaconda.NewTwitterApi(keys[2], keys[3])
+	searchResult, _ := api.GetSearch("golang", nil)
+	for _, tweet := range searchResult.Statuses {
+		fmt.Println(tweet.Text)
+	}
 }
 
 func main() {
