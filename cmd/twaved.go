@@ -1,52 +1,20 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/ChimeraCoder/anaconda"
-	"io/ioutil"
-	// "net/url"
-	"os"
+	"net/url"
 )
 
-type Tauth struct {
-	consumerKey, consumerSecret, accessToken, accessSecret string
-}
-
-type jsonobject struct {
-	Name  string
-	Value string
-}
-
-func LoadAuthKeys(filename string) []string {
-
-	var jsontype []jsonobject
-	keyValues := make([]string, 4)
-	file, e := ioutil.ReadFile(filename)
-	if e != nil {
-		fmt.Printf("File error: %v\n", e)
-		os.Exit(1)
-	}
-	json.Unmarshal(file, &jsontype)
-	for i := range jsontype {
-		keyValues[i] = jsontype[i].Value
-	}
-	return keyValues
-}
-
-func PerformAuth(keys []string) *anaconda.TwitterApi {
-
-	anaconda.SetConsumerKey(keys[0])
-	anaconda.SetConsumerSecret(keys[1])
-	api := anaconda.NewTwitterApi(keys[2], keys[3])
-	return api
-}
-
 func main() {
-	apiKeys := LoadAuthKeys("./config.json")
+	// file contains twitter api keys
+	const keyFile = "config.json"
+	// Search String Additional Values
+	faveStringValues := url.Values{}
+	faveStringValues.Set("count", "50")
+	apiKeys := LoadAuthKeys(keyFile)
 	twApi := PerformAuth(apiKeys)
-	searchResult, _ := twApi.GetSearch("golang", nil)
-	for _, tweet := range searchResult.Statuses {
+	faveGetResults, _ := twApi.GetFavorites(faveStringValues)
+	for _, tweet := range faveGetResults {
 		fmt.Println(tweet.Text)
 	}
 }
