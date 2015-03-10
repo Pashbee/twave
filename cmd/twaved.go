@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/ChimeraCoder/anaconda"
 	"net/url"
-	"time"
 )
 
 func CacheFaves(twapi *anaconda.TwitterApi) {
@@ -17,12 +16,28 @@ func CacheFaves(twapi *anaconda.TwitterApi) {
 	}
 }
 
+func GetFaveCount(twapi *anaconda.TwitterApi, sname string) int {
+	userQueryValues := url.Values{}
+	userQueryValues.Set("screen_name", sname)
+	userq, e := twapi.GetUsersShow(sname, userQueryValues)
+	if e != nil {
+		fmt.Printf("Twitter User Query Error: %v\n", e)
+
+	}
+	return userq.FavouritesCount
+}
+
 func main() {
 	// file contains twitter api keys
 	const keyFile = "config.json"
 	// API max call limit on 15 min reset
 	const apiCallLimit = 15
+	// 200 count max per call
+	const apiFaveCallCount = 200
+	const screenName = "MarkPashby"
 	apiKeys := LoadAuthKeys(keyFile)
 	twApi := PerformAuth(apiKeys)
+	userFaveCount := GetFaveCount(twApi, screenName)
 	CacheFaves(twApi)
+
 }
